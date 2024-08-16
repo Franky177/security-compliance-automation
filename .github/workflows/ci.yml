@@ -1,0 +1,25 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Trivy
+      run: |
+        sudo apt-get update
+        wget https://github.com/aquasecurity/trivy/releases/download/v0.34.0/trivy_0.34.0_Linux-64bit.deb
+        sudo dpkg -i trivy_0.34.0_Linux-64bit.deb
+
+    - name: Run Trivy scan
+      run: |
+        trivy fs --security-checks vuln /
